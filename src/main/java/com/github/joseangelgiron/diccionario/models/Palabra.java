@@ -56,7 +56,7 @@ public class Palabra {
         return definiciones;
     }
 
-    public void setDefinicions(Set<Definicion> definiciones) {
+    public void setDefiniciones(Set<Definicion> definiciones) {
         this.definiciones = definiciones;
     }
 

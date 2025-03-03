@@ -1,7 +1,9 @@
 package com.github.joseangelgiron.diccionario.servicies;
 
 import com.github.joseangelgiron.diccionario.exceptions.PalabraNotFoundException;
+import com.github.joseangelgiron.diccionario.models.Definicion;
 import com.github.joseangelgiron.diccionario.models.Palabra;
+import com.github.joseangelgiron.diccionario.repositories.DefinicionRepository;
 import com.github.joseangelgiron.diccionario.repositories.PalabraRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 public class PalabraService {
@@ -17,6 +20,14 @@ public class PalabraService {
     @Autowired
     private PalabraRepository palabraRepository;
 
+    @Autowired
+    private DefinicionRepository definicionRepository;
+
+    /**
+     * Retrieves all words from the database.
+     *
+     * @return A list of all words. If no words are found, returns an empty list.
+     */
     public List<Palabra> getAllPalabras() {
         List<Palabra> PalabrasList = palabraRepository.findAll();
         if(!PalabrasList.isEmpty()){
@@ -26,48 +37,112 @@ public class PalabraService {
         }
     }
 
+    /**
+     * Retrieves a word by its ID.
+     *
+     * @param id The ID of the word to retrieve.
+     * @return The word if found.
+     * @throws PalabraNotFoundException if no word is found with the given ID.
+     */
     public Palabra getPalabraById(Integer id) throws PalabraNotFoundException {
         Optional<Palabra> Palabra = palabraRepository.findById(id);
         if(Palabra.isPresent()){
             return Palabra.get();
         }else{
-            throw new PalabraNotFoundException("  ",id);
+            throw new PalabraNotFoundException("No existe una palabra para el id ",id);
         }
     }
 
-    public Palabra createPalabra(Palabra Palabra)  {
-        Palabra = palabraRepository.save(Palabra);
-        return Palabra;
+    /**
+     * Creates and saves a new word in the database.
+     *
+     * @param palabra The word entity to be saved.
+     * @return The saved word with its generated ID and other persisted details.
+     */
+    public Palabra createPalabra(Palabra palabra)  {
+        Palabra palabraSaved = palabraRepository.save(palabra);
+        return palabraSaved;
     }
 
-    public Palabra updatePalabra(Palabra Palabra)  throws PalabraNotFoundException {
-        if (Palabra.getId()!=null){
-            Optional<Palabra> PalabraOptional = palabraRepository.findById(Palabra.getId());
-            if (PalabraOptional.isPresent()){
-                Palabra newPalabra = PalabraOptional.get();
-                newPalabra.setTermino(Palabra.getTermino());
-                newPalabra.setCategoriaGramatical(Palabra.getCategoriaGramatical());
+    /**
+     * Creates a new word along with its associated definitions.
+     *
+     * @param palabra The word entity to be saved, including its definitions.
+     * @return The saved word with its associated definitions persisted.
+     */
+    public Palabra createPalabraAndDefiniciones(Palabra palabra) throws PalabraNotFoundException {
 
-                newPalabra=palabraRepository.save(newPalabra);
-                return newPalabra;
-            }else{
-                throw new PalabraNotFoundException("No existe Palabra para el id: ",Palabra.getId());
-            }
+        palabra = palabraRepository.save(palabra);
+
+        Set<Definicion> definiciones = palabra.getDefiniciones();
+        for (Definicion definicion : definiciones) {
+            definicion.setPalabra(palabra);
+        }
+        definicionRepository.saveAll(definiciones);
+
+        return palabra;
+    }
+
+    /**
+     * Updates an existing word in the database.
+     *
+     * @param palabra The word entity containing updated values.
+     * @return The updated word.
+     * @throws PalabraNotFoundException if the word with the given ID is not found.
+     * @throws IllegalArgumentException if the provided word or its ID is null.
+     */
+    public Palabra updatePalabra(Palabra palabra)  throws PalabraNotFoundException {
+        Optional<Palabra> palabraOptional = palabraRepository.findById(palabra.getId());
+        if (palabraOptional.isPresent()){
+
+            Palabra newPalabra = palabraOptional.get();
+            newPalabra.setTermino(palabra.getTermino());
+            newPalabra.setCategoriaGramatical(palabra.getCategoriaGramatical());
+
+            newPalabra=palabraRepository.save(newPalabra);
+            return newPalabra;
+
         }else{
-            throw new PalabraNotFoundException("No hay id en la palabra a actualizar ",0l);
+            throw new PalabraNotFoundException("No hay id en la palabra a actualizar ", 0L);
         }
     }
 
 
-
+    /**
+     * Deletes a word by its ID.
+     *
+     * @param id The ID of the word to delete.
+     * @throws PalabraNotFoundException if no word is found with the given ID.
+     */
     public void deletePalabra(Integer id) throws PalabraNotFoundException {
-        Optional<Palabra> PalabraOptional = palabraRepository.findById(id);
-        if (PalabraOptional.isPresent()){
-            palabraRepository.delete(PalabraOptional.get());
+        Optional<Palabra> palabraOptional = palabraRepository.findById(id);
+        if (palabraOptional.isPresent()){
+            palabraRepository.delete(palabraOptional.get());
         }else{
             throw new PalabraNotFoundException("No existe Palabra para el id: ",id);
         }
     }
 
+    /**
+     * Retrieves a list of words by their grammatical category.
+     *
+     * @param category The grammatical category to filter the words by.
+     * @return A list of words belonging to the specified category. If no words are found, returns an empty list.
+     */
+    public List<Palabra> getPalabrasByCategoria(String category) {
+        List<Palabra> palabras = palabraRepository.getPalabrasByCategoriaGramatical(category);
+        return palabras;
+    }
 
+    /**
+     * Retrieves a list of words that start with the specified letter.
+     *
+     * @param letra The initial letter to filter the words by.
+     * @return A list of words that start with the specified letter. If no words are found, returns an empty list.
+     */
+    public List<Palabra> getPalabrasByInitials(String letra) {
+        List<Palabra> palabras = palabraRepository.getPalabrasByTerminoStartingWith(letra);
+        return palabras;
+
+    }
 }

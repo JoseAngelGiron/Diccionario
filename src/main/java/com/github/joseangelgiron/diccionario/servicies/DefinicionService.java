@@ -17,10 +17,16 @@ public class DefinicionService {
 
     @Autowired
     private DefinicionRepository definicionRepository;
-
     @Autowired
     private PalabraRepository palabraRepository;
 
+    /**
+     * Retrieves the list of definitions associated with a specific word.
+     *
+     * @param palabraId The ID of the word whose definitions are to be retrieved.
+     * @return A list of definitions if the word exists and has associated definitions;
+     *         otherwise, returns an empty list.
+     */
     public List<Definicion> getDefinicionesByPalabra(Integer palabraId) {
         Optional<Palabra> palabra = palabraRepository.findById(palabraId);
         if(palabra.isPresent()) {
@@ -33,6 +39,14 @@ public class DefinicionService {
         return new ArrayList<>();
     }
 
+    /**
+     * Adds a new definition to a specific word.
+     *
+     * @param palabraId The ID of the word to which the definition will be added.
+     * @param definicion The definition object to be associated with the word.
+     * @return The saved definition after being associated with the word.
+     * @throws PalabraNotFoundException if the word with the given ID does not exist.
+     */
     public Definicion addDefinicion(Integer palabraId, Definicion definicion) {
         Optional<Palabra> palabra = palabraRepository.findById(palabraId);
         if (palabra.isPresent()) {
@@ -42,7 +56,19 @@ public class DefinicionService {
         throw new PalabraNotFoundException("Palabra no encontrada", 1);
     }
 
-    public void deleteDefinicion(Integer id) {
-        definicionRepository.deleteById(id);
+    /**
+     * Deletes a definition by its ID.
+     *
+     * @param id The ID of the definition to be deleted.
+     * @return {@code true} if the definition was found and deleted, {@code false} otherwise.
+     */
+    public boolean deleteDefinicion(Integer id) {
+        boolean deleted = false;
+        Optional<Palabra> palabraOptional = definicionRepository.findDefinicionById(id);
+        if(palabraOptional.isPresent()) {
+            definicionRepository.deleteById(id);
+            deleted = true;
+        }
+        return deleted;
     }
 }
