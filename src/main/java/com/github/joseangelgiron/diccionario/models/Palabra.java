@@ -26,7 +26,7 @@ public class Palabra {
     private String categoriaGramatical;
 
     @OneToMany(mappedBy = "palabra")
-    private Set<Definicion> definicions = new LinkedHashSet<>();
+    private Set<Definicion> definiciones = new LinkedHashSet<>();
 
     public Integer getId() {
         return id;
@@ -52,12 +52,12 @@ public class Palabra {
         this.categoriaGramatical = categoriaGramatical;
     }
 
-    public Set<Definicion> getDefinicions() {
-        return definicions;
+    public Set<Definicion> getDefiniciones() {
+        return definiciones;
     }
 
-    public void setDefinicions(Set<Definicion> definicions) {
-        this.definicions = definicions;
+    public void setDefinicions(Set<Definicion> definiciones) {
+        this.definiciones = definiciones;
     }
 
 }
