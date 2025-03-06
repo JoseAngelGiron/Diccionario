@@ -1,6 +1,8 @@
 package com.github.joseangelgiron.diccionario.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import org.hibernate.annotations.OnDelete;
@@ -28,8 +30,10 @@ public class Definicion {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "palabra_id", nullable = false)
-    @JsonIgnore
+    @JsonBackReference
     private Palabra palabra;
+
+
 
     public Integer getId() {
         return id;

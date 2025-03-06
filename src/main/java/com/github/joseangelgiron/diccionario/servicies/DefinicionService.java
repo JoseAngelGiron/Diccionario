@@ -8,8 +8,7 @@ import com.github.joseangelgiron.diccionario.repositories.PalabraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
+
 import java.util.Optional;
 
 @Service
@@ -27,16 +26,14 @@ public class DefinicionService {
      * @return A list of definitions if the word exists and has associated definitions;
      *         otherwise, returns an empty list.
      */
-    public List<Definicion> getDefinicionesByPalabra(Integer palabraId) {
+    public Palabra getDefinicionesByPalabra(Integer palabraId) {
         Optional<Palabra> palabra = palabraRepository.findById(palabraId);
         if(palabra.isPresent()) {
-            List<Definicion> definiciones = definicionRepository.getDefinicionesByPalabraId(palabraId);
-            if(definiciones != null) {
-                return definiciones;
-            }
+
+            return palabra.get();
         }
 
-        return new ArrayList<>();
+        return null;
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.github.joseangelgiron.diccionario.models;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -26,6 +27,7 @@ public class Palabra {
     private String categoriaGramatical;
 
     @OneToMany(mappedBy = "palabra")
+    @JsonManagedReference
     private Set<Definicion> definiciones = new LinkedHashSet<>();
 
     public Integer getId() {

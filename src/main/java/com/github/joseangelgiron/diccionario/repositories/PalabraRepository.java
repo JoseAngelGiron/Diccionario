@@ -13,7 +13,9 @@ import java.util.List;
 public interface PalabraRepository extends JpaRepository<Palabra, Integer> {
 
 
-    List getPalabrasByCategoriaGramatical(@Size(max = 50) @NotNull String categoriaGramatical);
+
 
     List<Palabra> getPalabrasByTerminoStartingWith(String letra);
+
+    List<Palabra> getPalabrasByCategoriaGramatical(@Size(max = 50) @NotNull String categoriaGramatical);
 }

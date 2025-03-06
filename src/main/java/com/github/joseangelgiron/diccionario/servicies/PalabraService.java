@@ -9,10 +9,8 @@ import com.github.joseangelgiron.diccionario.repositories.PalabraRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class PalabraService {
@@ -23,19 +21,26 @@ public class PalabraService {
     @Autowired
     private DefinicionRepository definicionRepository;
 
+
     /**
      * Retrieves all words from the database.
      *
-     * @return A list of all words. If no words are found, returns an empty list.
+     * @return A list of words represented as a map without definitions.
      */
-    public List<Palabra> getAllPalabras() {
-        List<Palabra> PalabrasList = palabraRepository.findAll();
-        if(!PalabrasList.isEmpty()){
-            return PalabrasList;
-        }else{
-            return new ArrayList<Palabra>();
-        }
+    public List<Map<String, Object>> getAllPalabras() {
+        List<Palabra> palabrasList = palabraRepository.findAll();
+
+        return palabrasList.stream()
+                .map(p -> {
+                    Map<String, Object> palabraMap = new HashMap<>();
+                    palabraMap.put("id", p.getId());
+                    palabraMap.put("termino", p.getTermino());
+                    palabraMap.put("categoriaGramatical", p.getCategoriaGramatical());
+                    return palabraMap;
+                })
+                .collect(Collectors.toList());
     }
+
 
     /**
      * Retrieves a word by its ID.
@@ -44,7 +49,7 @@ public class PalabraService {
      * @return The word if found.
      * @throws PalabraNotFoundException if no word is found with the given ID.
      */
-    public Palabra getPalabraById(Integer id) throws PalabraNotFoundException {
+    public Palabra getPalabraById(Integer id) throws PalabraNotFoundException { //HACER SIN DEFINICIONES
         Optional<Palabra> Palabra = palabraRepository.findById(id);
         if(Palabra.isPresent()){
             return Palabra.get();
@@ -70,7 +75,7 @@ public class PalabraService {
      * @param palabra The word entity to be saved, including its definitions.
      * @return The saved word with its associated definitions persisted.
      */
-    public Palabra createPalabraAndDefiniciones(Palabra palabra) throws PalabraNotFoundException {
+    public Palabra createPalabraAndDefiniciones(Palabra palabra) {
 
         palabra = palabraRepository.save(palabra);
 

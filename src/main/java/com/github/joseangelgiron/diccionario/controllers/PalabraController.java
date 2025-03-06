@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/palabras")
@@ -30,10 +31,11 @@ public class PalabraController {
      */
     @CrossOrigin 
     @GetMapping
-    public ResponseEntity<List<Palabra>> findAll() {
-        List<Palabra> list = palabraService.getAllPalabras();
-        return new ResponseEntity<List<Palabra>>(list, new HttpHeaders(), HttpStatus.OK);
+    public ResponseEntity<List<Map<String, Object>>> findAll() {
+        List<Map<String, Object>> list = palabraService.getAllPalabras();
+        return new ResponseEntity<>(list, new HttpHeaders(), HttpStatus.OK);
     }
+
 
 
     /**
@@ -146,38 +148,6 @@ public class PalabraController {
     }
 
 
-    /**
-     * Retrieves all definitions for a specific word by its ID.
-     *
-     * @param id The ID of the word for which definitions are being fetched.
-     * @return A ResponseEntity containing a list of definitions, with an HTTP status of 200 (OK)
-     */
-    @CrossOrigin
-    @GetMapping("/{id}/definiciones")
-    public ResponseEntity<List<Definicion>> findAll(@PathVariable Integer id) {
-        List<Definicion> list = definicionService.getDefinicionesByPalabra(id);
-        return new ResponseEntity<>(list, HttpStatus.OK);
-    }
-
-
-    /**
-     * Adds a new definition to a specific word.
-     *
-     * @param id The ID of the word to which the definition is being added.
-     * @param definicion The definition to be added.
-     * @return A ResponseEntity containing the created definition, with a status of 201 (Created).
-     * @throws PalabraNotFoundException if the word with the given ID does not exist.
-     */
-    @CrossOrigin
-    @PostMapping("/{id}/definiciones")
-    public ResponseEntity<Definicion> addDefinicion(@PathVariable Integer id, @RequestBody Definicion definicion) {
-        try {
-            Definicion nuevaDefinicion = definicionService.addDefinicion(id, definicion);
-            return new ResponseEntity<>(nuevaDefinicion, HttpStatus.CREATED);
-        } catch (PalabraNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-    }
 
 
 
