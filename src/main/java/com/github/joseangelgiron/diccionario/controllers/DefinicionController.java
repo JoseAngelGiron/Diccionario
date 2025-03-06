@@ -5,6 +5,11 @@ import com.github.joseangelgiron.diccionario.models.Definicion;
 import com.github.joseangelgiron.diccionario.models.Palabra;
 import com.github.joseangelgiron.diccionario.servicies.DefinicionService;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 
@@ -19,37 +24,35 @@ public class DefinicionController {
     @Autowired
     private DefinicionService definicionService;
 
-    /**
-     * Deletes a definition by its ID.
-     *
-     * @param id The ID of the definition to delete.
-     * @return A status indicating the outcome of the operation.
-     *         - 204 (No Content) if deletion was successful.
-     *         - 404 (Not Found) if the definition with the given ID was not found.
-     */
+
     @DeleteMapping("/{id}")
+    @Operation(summary = "Eliminar una definición por ID",
+            description = "Elimina una definición del sistema usando su ID. Devuelve un estado HTTP indicando el resultado.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "202", description = "Definición eliminada exitosamente"),
+            @ApiResponse(responseCode = "400", description = "No se pudo eliminar la definición, solicitud incorrecta")
+    })
     public HttpStatus deleteDefinicion(@PathVariable Integer id) {
 
         boolean deleted = definicionService.deleteDefinicion(id);
 
         if (deleted) {
             return HttpStatus.ACCEPTED;
-        }else {
+        } else {
             return HttpStatus.BAD_REQUEST;
         }
     }
 
 
-    /**
-     * Adds a new definition to a specific word.
-     *
-     * @param id The ID of the word to which the definition is being added.
-     * @param definicion The definition to be added.
-     * @return A ResponseEntity containing the created definition, with a status of 201 (Created).
-     * @throws PalabraNotFoundException if the word with the given ID does not exist.
-     */
     @CrossOrigin
     @PostMapping("/palabra/{id}")
+    @Operation(summary = "Agregar una definición a una palabra",
+            description = "Añade una nueva definición a una palabra existente mediante su ID. Si la palabra no se encuentra, devuelve un error.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "201", description = "Definición creada exitosamente",
+                    content = @Content(schema = @Schema(implementation = Definicion.class))),
+            @ApiResponse(responseCode = "404", description = "Palabra no encontrada")
+    })
     public ResponseEntity<Definicion> addDefinicion(@PathVariable Integer id, @RequestBody Definicion definicion) {
         try {
             Definicion nuevaDefinicion = definicionService.addDefinicion(id, definicion);
@@ -60,18 +63,20 @@ public class DefinicionController {
     }
 
 
-    /**
-     * Retrieves all definitions with his word for a specific word by its ID.
-     *
-     * @param id The ID of the word for which definitions are being fetched.
-     * @return A ResponseEntity containing a list of definitions, with an HTTP status of 200 (OK)
-     */
     @CrossOrigin
     @GetMapping("/palabra/{id}")
+    @Operation(summary = "Obtener una palabra y sus definiciones",
+            description = "Busca una palabra por su ID y devuelve sus definiciones asociadas.")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Palabra encontrada exitosamente",
+                    content = @Content(schema = @Schema(implementation = Palabra.class))),
+            @ApiResponse(responseCode = "404", description = "Palabra no encontrada")
+    })
     public ResponseEntity<Palabra> findPalabraAndDefinitions(@PathVariable Integer id) {
         Palabra palabra = definicionService.getDefinicionesByPalabra(id);
         return new ResponseEntity<>(palabra, HttpStatus.OK);
     }
+
 
 
 }
