@@ -24,7 +24,7 @@ public class PalabraController {
     private PalabraService palabraService;
 
 
-
+    @CrossOrigin
     @GetMapping
     @Operation(
             summary = "Obtener todas las palabras",
@@ -37,7 +37,7 @@ public class PalabraController {
 
 
 
-
+    @CrossOrigin
     @GetMapping("/{id}")
     @Operation(
             summary = "Obtener una palabra por ID",
@@ -52,7 +52,7 @@ public class PalabraController {
     }
 
 
-
+    @CrossOrigin
     @GetMapping("/categoria/{categoria}")
     @Operation(
             summary = "Obtener palabras por categoría",
@@ -70,7 +70,7 @@ public class PalabraController {
         return new ResponseEntity<>(palabras, HttpStatus.OK);
     }
 
-
+    @CrossOrigin
     @GetMapping("/inicial/{letra}")
     @Operation(
             summary = "Obtener palabras por letra inicial",
@@ -89,7 +89,7 @@ public class PalabraController {
         return new ResponseEntity<>(palabras, HttpStatus.OK);
     }
 
-
+    @CrossOrigin
     @PostMapping
     @Operation(
             summary = "Crear una nueva palabra",
@@ -107,7 +107,7 @@ public class PalabraController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPalabra);
     }
 
-
+    @CrossOrigin
     @PostMapping("/con-definiciones")
     @Operation(
             summary = "Crear una palabra con definiciones",
@@ -125,7 +125,7 @@ public class PalabraController {
         return ResponseEntity.status(HttpStatus.CREATED).body(createdPalabra);
     }
 
-
+    @CrossOrigin
     @PutMapping
     @Operation(
             summary = "Actualizar una palabra",

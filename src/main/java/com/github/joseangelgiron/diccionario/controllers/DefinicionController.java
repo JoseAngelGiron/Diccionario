@@ -22,7 +22,7 @@ public class DefinicionController {
     @Autowired
     private DefinicionService definicionService;
 
-
+    @CrossOrigin
     @DeleteMapping("/{id}")
     @Operation(summary = "Eliminar una definición por ID",
             description = "Elimina una definición del sistema usando su ID. Devuelve un estado HTTP indicando el resultado.")
