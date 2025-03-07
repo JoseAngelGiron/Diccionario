@@ -2,7 +2,6 @@ package com.github.joseangelgiron.diccionario.controllers;
 
 import com.github.joseangelgiron.diccionario.exceptions.PalabraNotFoundException;
 import com.github.joseangelgiron.diccionario.models.Palabra;
-import com.github.joseangelgiron.diccionario.servicies.DefinicionService;
 import com.github.joseangelgiron.diccionario.servicies.PalabraService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -24,8 +23,6 @@ public class PalabraController {
     @Autowired
     private PalabraService palabraService;
 
-    @Autowired
-    private DefinicionService definicionService;
 
 
     @GetMapping
