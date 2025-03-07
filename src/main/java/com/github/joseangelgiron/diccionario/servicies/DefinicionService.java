@@ -61,8 +61,8 @@ public class DefinicionService {
      */
     public boolean deleteDefinicion(Integer id) {
         boolean deleted = false;
-        Optional<Palabra> palabraOptional = definicionRepository.findDefinicionById(id);
-        if(palabraOptional.isPresent()) {
+        Optional<Definicion> definicionOptional = definicionRepository.findDefinicionById(id);
+        if(definicionOptional.isPresent()) {
             definicionRepository.deleteById(id);
             deleted = true;
         }

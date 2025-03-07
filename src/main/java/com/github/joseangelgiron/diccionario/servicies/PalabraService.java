@@ -49,14 +49,24 @@ public class PalabraService {
      * @return The word if found.
      * @throws PalabraNotFoundException if no word is found with the given ID.
      */
-    public Palabra getPalabraById(Integer id) throws PalabraNotFoundException { //HACER SIN DEFINICIONES
-        Optional<Palabra> Palabra = palabraRepository.findById(id);
-        if(Palabra.isPresent()){
-            return Palabra.get();
-        }else{
-            throw new PalabraNotFoundException("No existe una palabra para el id ",id);
+    public Map<String, Object> getPalabraById(Integer id) throws PalabraNotFoundException {
+        Optional<Palabra> palabra = palabraRepository.findById(id);
+
+        if (palabra.isPresent()) {
+            Palabra palabraEntity = palabra.get();
+
+            Map<String, Object> palabraMap = new LinkedHashMap<>();
+            palabraMap.put("id", palabraEntity.getId());
+            palabraMap.put("termino", palabraEntity.getTermino());
+            palabraMap.put("categoriaGramatical", palabraEntity.getCategoriaGramatical());
+
+            return palabraMap;
+        } else {
+            throw new PalabraNotFoundException("No existe una palabra para el id ", id);
         }
     }
+
+
 
     /**
      * Creates and saves a new word in the database.

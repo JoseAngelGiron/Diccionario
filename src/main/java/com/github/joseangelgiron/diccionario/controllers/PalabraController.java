@@ -48,13 +48,14 @@ public class PalabraController {
             summary = "Obtener una palabra por ID",
             description = "Recupera una palabra específica a partir de su identificador único."
     )
-    public ResponseEntity<Palabra> getPalabraById(
+    public ResponseEntity<Map<String, Object>> getPalabraById(
             @Parameter(description = "ID de la palabra a buscar", required = true, example = "1")
             @PathVariable Integer id) throws PalabraNotFoundException {
 
-        Palabra palabra = palabraService.getPalabraById(id);
+        Map<String, Object> palabra = palabraService.getPalabraById(id);
         return new ResponseEntity<>(palabra, new HttpHeaders(), HttpStatus.OK);
     }
+
 
 
     @GetMapping("/categoria/{categoria}")
