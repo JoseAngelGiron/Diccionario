@@ -31,9 +31,9 @@ public class DefinicionService {
         if(palabra.isPresent()) {
 
             return palabra.get();
+        }else{
+            throw new PalabraNotFoundException("Palabra no encontrada", 1);
         }
-
-        return null;
     }
 
     /**

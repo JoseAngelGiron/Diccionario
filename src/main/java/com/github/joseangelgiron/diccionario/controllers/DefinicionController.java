@@ -6,8 +6,6 @@ import com.github.joseangelgiron.diccionario.models.Palabra;
 import com.github.joseangelgiron.diccionario.servicies.DefinicionService;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,8 +47,7 @@ public class DefinicionController {
     @Operation(summary = "Agregar una definición a una palabra",
             description = "Añade una nueva definición a una palabra existente mediante su ID. Si la palabra no se encuentra, devuelve un error.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Definición creada exitosamente",
-                    content = @Content(schema = @Schema(implementation = Definicion.class))),
+            @ApiResponse(responseCode = "201", description = "Definición creada exitosamente"),
             @ApiResponse(responseCode = "404", description = "Palabra no encontrada")
     })
     public ResponseEntity<Definicion> addDefinicion(@PathVariable Integer id, @RequestBody Definicion definicion) {
@@ -68,8 +65,7 @@ public class DefinicionController {
     @Operation(summary = "Obtener una palabra y sus definiciones",
             description = "Busca una palabra por su ID y devuelve sus definiciones asociadas.")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Palabra encontrada exitosamente",
-                    content = @Content(schema = @Schema(implementation = Palabra.class))),
+            @ApiResponse(responseCode = "200", description = "Palabra encontrada exitosamente"),
             @ApiResponse(responseCode = "404", description = "Palabra no encontrada")
     })
     public ResponseEntity<Palabra> findPalabraAndDefinitions(@PathVariable Integer id) {

@@ -6,8 +6,6 @@ import com.github.joseangelgiron.diccionario.servicies.DefinicionService;
 import com.github.joseangelgiron.diccionario.servicies.PalabraService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
-import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -157,8 +155,7 @@ public class PalabraController {
             description = "Elimina una palabra del sistema usando su ID. Si la palabra no existe, lanza una excepción.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "202", description = "Palabra eliminada exitosamente"),
-            @ApiResponse(responseCode = "404", description = "Palabra no encontrada",
-                    content = @Content(schema = @Schema(implementation = PalabraNotFoundException.class)))
+            @ApiResponse(responseCode = "404", description = "Palabra no encontrada")
     })
     public HttpStatus deletePalabrabyId(@PathVariable Integer id) throws PalabraNotFoundException {
         palabraService.deletePalabra(id);
